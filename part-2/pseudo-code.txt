@@ -1,0 +1,62 @@
+=============================================================
+Algorithm: nextFit
+Inputs: trucks:List of Trucks; boxes:List of Boxes
+Variables: truck:Truck; pile:Pile; trucksUsed:Integer
+Returns: trucksUsed:Integer
+
+Begin
+	trucksUsed := 1
+	truck := makeTruck()
+	trucks.add(truck)
+	pile := null
+	
+	FOR every box in the list of boxes DO
+		IF putBox(truck, canFitOnPile(truck, pile, box), box) = FALSE THEN
+			IF putBoxInNewTruck(trucks, box) = TRUE THEN
+				truck := getLastTruck(trucks)
+				INCREMENT trucksUsed
+			ENDIF
+		ENDIF
+		IF truck.piles.size() > 0 IS TRUE THEN
+			pile := getLastPileInTruck(truck)
+		ELSE
+			pile := null
+		ENDIF
+	ENDFOR
+	
+	truck := firstTruckInList(trucks)
+	IF truckHasAnyPiles(truck) = FALSE THEN
+		trucks.remove(0)
+		trucksUsed := 0
+	ENDIF
+	RETURN trucksUsed
+End
+=============================================================
+
+=============================================================
+Algorithm: firstFit
+Inputs: trucks:List of Trucks; boxes:List of Boxes
+Variables: truck:Truck; trucksUsed:Integer; truckIdx:Integer
+Returns: trucksUsed:Integer
+
+Begin
+	trucksUsed := 0
+	truckIdx := 0
+	truck := null
+	
+	FOR every box in the list of boxes DO
+		FOR truckIdx := 0 TO trucks.size() DO
+			truck := trucks.get(truckIdx)
+			IF putBox(truck, canFitOnPile(truck, box), box) = TRUE THEN
+				BREAK
+			ENDIF
+		ENDFOR
+		IF truckIdx = trucks.size() THEN
+			IF putBoxInNewTruck(trucks, box) = TRUE THEN
+				INCREMENT trucksUsed
+			ENDIF
+		ENDIF
+	ENDFOR
+	RETURN trucksUsed
+End
+=============================================================
